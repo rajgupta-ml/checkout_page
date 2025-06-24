@@ -31,7 +31,7 @@ const Hero = () => {
 			</div>
 			<div className="w-full  items-center flex justify-center ">
 				<Link
-					href="/signup"
+					href="/sign-up"
 					className=" bg-primary text-muted w-md text-center flex items-center justify-center p-4"
 				>
 					Sign Up
