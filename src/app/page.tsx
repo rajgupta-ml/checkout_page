@@ -1,8 +1,9 @@
+import Landing from '@/componets/Landing';
 
 export default function Home() {
-  return (
-    <div>
-      Hello
-    </div>
-  );
+	return (
+		<div>
+			<Landing></Landing>
+		</div>
+	);
 }
