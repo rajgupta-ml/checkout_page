@@ -20,6 +20,7 @@ const steps = [
 ];
 const Page = () => {
 	const [stepIndex, setStepIndex] = useState(0);
+
 	return (
 		<div>
 			<div

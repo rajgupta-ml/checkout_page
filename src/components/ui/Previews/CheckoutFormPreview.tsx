@@ -1,4 +1,9 @@
-import { configContext, DiscountCode } from '@/app/Provider/configProvider';
+'use client';
+import {
+	CheckoutConfig,
+	configContext,
+	DiscountCode,
+} from '@/app/Provider/configProvider';
 import { CreditCard, Lock } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../card';
@@ -18,13 +23,14 @@ interface PaymentData {
 }
 
 // Enhanced Checkout Form Component with Stripe Support
-const CheckoutForm = () => {
+const CheckoutForm = ({ dbConfig }: { dbConfig?: CheckoutConfig }) => {
 	const [appliedDiscount, setAppliedDiscount] = useState<DiscountCode>();
 	const [discountCode, setDiscountCode] = useState('');
 	const [selectedPaymentMethod, setSelectedPaymentMethod] =
 		useState<PaymentMethod>('card');
 	const [isProcessing, setIsProcessing] = useState(false);
-	const { checkoutConfig: config } = useContext(configContext);
+	const { checkoutConfig } = useContext(configContext);
+	const config = dbConfig ?? checkoutConfig;
 	const [paymentData, setPaymentData] = useState<PaymentData>({
 		cardNumber: '',
 		expiryDate: '',

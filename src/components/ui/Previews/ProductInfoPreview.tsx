@@ -1,23 +1,29 @@
-import { configContext } from '@/app/Provider/configProvider';
+'use client';
+import { CheckoutConfig, configContext } from '@/app/Provider/configProvider';
 import Image from 'next/image';
 import { useContext } from 'react';
 
 // Product Info Component
 interface IProductInfo {
 	isLight?: boolean;
+	dbConfig?: CheckoutConfig;
 }
 
-const ProductInfo = ({ isLight = true }: IProductInfo) => {
+const ProductInfo = ({ isLight = true, dbConfig }: IProductInfo) => {
 	const textColor = isLight ? 'text-gray-900' : 'text-white';
 	const subtextColor = isLight ? 'text-gray-600' : 'text-white/80';
-	const { checkoutConfig: config } = useContext(configContext);
+	const { checkoutConfig } = useContext(configContext);
+
+	const config = dbConfig ?? checkoutConfig;
 
 	return (
 		<div className="max-w-md">
 			<Image
+				width={128}
+				height={64}
 				src={config.logoUrl || '/placeholder.svg'}
 				alt="Logo"
-				className="w-16 h-16 rounded-lg mb-4"
+				className="rounded-lg mb-4"
 			/>
 			<h1 className={`text-3xl font-bold mb-2 ${textColor}`}>
 				{config.productTitle}
@@ -39,10 +45,12 @@ const ProductInfo = ({ isLight = true }: IProductInfo) => {
 						.slice(0, 2)
 						.map((image: string, index: number) => (
 							<Image
+								width={40}
+								height={40}
 								key={index}
 								src={image || '/placeholder.svg'}
 								alt={`Product ${index + 1}`}
-								className="w-full h-24 object-cover rounded-lg"
+								className="w-full object-fill rounded-lg"
 							/>
 						))}
 			</div>

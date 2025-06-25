@@ -1,9 +1,4 @@
-import React, {
-	useContext,
-	useImperativeHandle,
-	useRef,
-	useState,
-} from 'react';
+import React, { useContext, useImperativeHandle, useState } from 'react';
 import { CardIcon, EventIcon, FormIcon } from './SvgIcons';
 import { Card, CardDescription, CardHeader, CardTitle } from './card';
 import { CheckCircle2 } from 'lucide-react';
@@ -17,7 +12,9 @@ import AfterPaymentSidebar from './Sidebars/AfterPaymentSidebar';
 import AfterPaymentPreview from './Previews/AfterPaymentPreview';
 import ProductInfo from './Previews/ProductInfoPreview';
 import { StepRefHandle } from './MultiStepForm';
-
+import axios from 'axios';
+import { useAuth } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 export const Step1 = ({ ref }: { ref: React.Ref<StepRefHandle> }) => {
 	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
@@ -192,16 +189,66 @@ export const Step2 = ({ ref }: { ref: React.Ref<StepRefHandle> }) => {
 };
 
 export const Step3 = () => {
-	const { checkoutConfig } = useContext(configContext);
-	const selectedLayoutIndex = useRef(checkoutConfig.selectedLayout);
+	const { checkoutConfig, logoFile, productFiles } = useContext(configContext);
 	const [activeTab, setActiveTab] = useState('product');
-
+	const { getToken } = useAuth();
+	const router = useRouter();
 	const tabs = [
 		{ id: 'product', label: 'Product', icon: '📦' },
 		{ id: 'checkout', label: 'Checkout', icon: '💳' },
 		{ id: 'design', label: 'Design', icon: '🎨' },
 		{ id: 'afterpayment', label: 'After Payment', icon: '✅' },
 	];
+
+	const getPreSignedUrlAndUpload = async (file: File): Promise<string> => {
+		const res = await axios.get(
+			`/api/v1/upload?filename=${encodeURIComponent(file.name)}`
+		);
+
+		const { url, key } = res.data;
+
+		await axios.put(url, file, {
+			headers: { 'Content-Type': file.type },
+		});
+
+		return `https://checkoutpageclone.s3.ap-south-1.amazonaws.com/${key}`;
+	};
+	const handleSave = async () => {
+		const updatedConfig = { ...checkoutConfig };
+		try {
+			const token = await getToken();
+
+			const headers = {
+				headers: {
+					'Content-Type': 'application/json',
+					...(token && { Authorization: `Bearer ${token}` }),
+				},
+			};
+
+			if (checkoutConfig.logoUrl.startsWith('blob:') && logoFile) {
+				updatedConfig.logoUrl = await getPreSignedUrlAndUpload(logoFile);
+			}
+
+			updatedConfig.productImages = await Promise.all(
+				checkoutConfig.productImages.map(async (url, idx) => {
+					if (url.startsWith('blob:') && productFiles[idx]) {
+						return await getPreSignedUrlAndUpload(productFiles[idx]);
+					}
+					return url;
+				})
+			);
+			const response = await axios.post(
+				'/api/v1/config',
+				updatedConfig,
+				headers
+			);
+			router.push('/dashboard');
+
+			console.log('Config saved', response.data);
+		} catch (error) {
+			console.error('❌ Save failed:', error);
+		}
+	};
 
 	const renderSidebar = () => {
 		switch (activeTab) {
@@ -230,7 +277,7 @@ export const Step3 = () => {
 			'--text': checkoutConfig.brandColors.text,
 		} as React.CSSProperties;
 
-		if (selectedLayoutIndex.current === 1) {
+		if (checkoutConfig.selectedLayout === 1) {
 			return (
 				<div
 					className="flex justify-center items-center min-h-screen bg-gray-50 p-4"
@@ -239,7 +286,7 @@ export const Step3 = () => {
 					<CheckoutForm />
 				</div>
 			);
-		} else if (selectedLayoutIndex.current === 2) {
+		} else if (checkoutConfig.selectedLayout === 2) {
 			return (
 				<div
 					className="min-h-screen bg-gray-50 grid grid-cols-1 lg:grid-cols-2"
@@ -294,7 +341,9 @@ export const Step3 = () => {
 							</button>
 						))}
 					</div>
-					<Button className="cursor-pointer">Save</Button>
+					<Button className="cursor-pointer" onClick={handleSave}>
+						Save
+					</Button>
 				</div>
 			</div>
 

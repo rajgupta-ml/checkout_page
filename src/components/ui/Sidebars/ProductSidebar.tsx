@@ -11,14 +11,19 @@ const ProductSidebar = () => {
 	const [showProductImages, setShowProductImages] = useState(true);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const productInputRef = useRef<HTMLInputElement>(null);
-	const { checkoutConfig: config, setCheckoutConfig: setConfig } =
-		useContext(configContext);
+	const {
+		checkoutConfig: config,
+		setCheckoutConfig: setConfig,
+		setLogoFile,
+		setProductFiles,
+		productFiles,
+	} = useContext(configContext);
 
 	const handleProductFileSave = (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
 			const url = URL.createObjectURL(file);
-
+			setProductFiles([...productFiles, file]);
 			setConfig((prev) => ({
 				...prev,
 				productImages: [...prev.productImages, url],
@@ -29,9 +34,8 @@ const ProductSidebar = () => {
 	const handleFileSave = (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
-			console.log('selected File');
 			const url = URL.createObjectURL(file);
-
+			setLogoFile(file);
 			setConfig((prev) => ({
 				...prev,
 				logoUrl: url,
@@ -134,6 +138,8 @@ const ProductSidebar = () => {
 					<Label>Logo</Label>
 					<div className="mt-2 border-2 border-dashed border-border rounded-lg p-4 text-center">
 						<Image
+							width={24}
+							height={24}
 							src={config.logoUrl || '/placeholder.svg'}
 							alt="Logo"
 							className="w-16 h-16 mx-auto mb-2 rounded"
@@ -171,6 +177,8 @@ const ProductSidebar = () => {
 								{config.productImages.map((image: string, index: number) => (
 									<div key={index} className="border rounded-lg p-2">
 										<Image
+											width={24}
+											height={24}
 											src={image || '/placeholder.svg'}
 											alt={`Product ${index + 1}`}
 											className="w-full h-20 object-cover rounded"

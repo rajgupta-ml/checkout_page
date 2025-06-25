@@ -32,6 +32,13 @@ interface AfterPaymentConfig {
 	customMessage: string;
 }
 
+interface FileStore {
+	logoFile: File | null;
+	productFiles: File[];
+	setLogoFile: Dispatch<SetStateAction<File | null>>;
+	setProductFiles: Dispatch<SetStateAction<File[]>>;
+}
+
 export interface CheckoutConfig {
 	// Product Details
 	selectedIndex: number;
@@ -115,7 +122,7 @@ const config = {
 	},
 };
 
-interface ConfigContextType {
+interface ConfigContextType extends FileStore {
 	checkoutConfig: CheckoutConfig;
 	setCheckoutConfig: Dispatch<SetStateAction<CheckoutConfig>>;
 }
@@ -123,6 +130,10 @@ interface ConfigContextType {
 export const configContext = createContext<ConfigContextType>({
 	checkoutConfig: config,
 	setCheckoutConfig: () => {},
+	logoFile: null,
+	setLogoFile: () => {},
+	productFiles: [],
+	setProductFiles: () => {},
 });
 
 export const ConfigContextProvider = ({
@@ -131,12 +142,18 @@ export const ConfigContextProvider = ({
 	children: React.ReactNode;
 }) => {
 	const [checkoutConfig, setCheckoutConfig] = useState<CheckoutConfig>(config);
+	const [logoFile, setLogoFile] = useState<File | null>(null);
+	const [productFiles, setProductFiles] = useState<File[]>([]);
 
 	return (
 		<configContext.Provider
 			value={{
 				checkoutConfig,
 				setCheckoutConfig,
+				logoFile,
+				setLogoFile,
+				productFiles,
+				setProductFiles,
 			}}
 		>
 			{children}

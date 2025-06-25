@@ -1,8 +1,26 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)']);
+const isPublicRoute = createRouteMatcher([
+	'/',
+	'/sign-in(.*)',
+	'/sign-up(.*) "/live-preview',
+]);
 
 export default clerkMiddleware(async (auth, req) => {
+	const hostname = req.headers.get('host') || '';
+	const isSubdomain =
+		hostname.endsWith('.localhost:3000') && hostname !== 'localhost:3000';
+
+	// Allow /live-preview only for subdomains, block others
+	if (isSubdomain && req.nextUrl.pathname === '/live-preview') {
+		return;
+	}
+
+	// All other subdomain paths are protected
+	if (isSubdomain && !isPublicRoute(req)) {
+		await auth.protect();
+	}
+
 	if (!isPublicRoute(req)) {
 		await auth.protect();
 	}
