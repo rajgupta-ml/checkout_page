@@ -1,4 +1,4 @@
-import Navbar from '@/componets/Navbar';
+import Navbar from '@/components/ui/Navbar';
 import React from 'react';
 import Container from './Container';
 import Link from 'next/link';
