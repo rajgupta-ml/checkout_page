@@ -1,11 +1,11 @@
 import ProductInfo from '@/components/ui/Previews/ProductInfoPreview';
 import CheckoutForm from '@/components/ui/Previews/CheckoutFormPreview';
-import { getConfigFromDbThroughConfigId, getSubdomain} from "../../lib/getSubdomain"
+import { getConfigFromDbThroughConfigId} from "../../lib/getSubdomain"
 import mongoose from 'mongoose';
 
-export default async function SubdomainCheckoutPage() {
-	const subdomain = await getSubdomain();
+export default async function SubdomainCheckoutPage({searchParams} : {searchParams : Promise<{ [key: string]: string | string[] | undefined }>}) {
 
+	const subdomain = ((await searchParams).id as string)
 	if (!subdomain) {
 		return (
 			<div className="flex justify-center items-center h-screen text-red-500">

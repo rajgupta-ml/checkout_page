@@ -21,8 +21,9 @@ const allowedSubdomainPaths = [
 
 export default clerkMiddleware(async (auth, req) => {
 	const hostname = req.headers.get('host') || '';
+	const url = process.env.URL ?? "localhost:3000"
 	const isSubdomain =
-		hostname.endsWith('.localhost:3000') && hostname !== 'localhost:3000';
+		hostname.endsWith(url) && hostname !== url;
 	// Allow /live-preview only for subdomains, block others
 
 	  

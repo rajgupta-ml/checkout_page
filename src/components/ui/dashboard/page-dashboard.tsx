@@ -35,10 +35,10 @@ const sidebarItems = [
 
 
 export function PagesDashboard({pagesData} : {pagesData? : PagesData[]}) {
-  const router = useRouter()
-
+  const router = useRouter()  
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useUser()
+  const protocol = window.location.hostname === "localhost" ? "http" : "https" 
 
   const handleClick = () => {
     setIsLoading(true);
@@ -52,14 +52,14 @@ export function PagesDashboard({pagesData} : {pagesData? : PagesData[]}) {
   }
 
   const handleCopyEmbedCode = (pageId: string) => {
-    const embedCode = `<iframe src="http://${pageId}.localhost:3000/live-preview/" width="100%" height="600" frameborder="0"></iframe>`
+    const embedCode = `<iframe src="${protocol}://${window.location.host}}live-preview?id=${pageId}" width="100%" height="600" frameborder="0"></iframe>`
     navigator.clipboard.writeText(embedCode)
     toast("Emedding has been copied to your clipboard")
   }
 
 
   const openLivePreview = (pageId : string) => {
-    const livePreview = `http://${pageId}.localhost:3000/live-preview/`
+    const livePreview = `${protocol}://${window.location.host}/live-preview/?id=${pageId}`
     window.open(livePreview, "_blank");
   } 
 

@@ -5,16 +5,22 @@ import Analytics, { IAnalytics } from '@/model/analytics';
 import mongoose from 'mongoose';
 export async function getSubdomain(): Promise<string | null> {
 	const headersList = await headers();
+	// console.log(headersList)
 	const host = headersList.get('host');
 	if (!host) return null;
 
-	// Assuming .localhost:3000 or a real domain like .mycheckout.com
+	console.log("host", host)
+
 	const parts = host.split('.');
-	if (host.includes('localhost')) {
-		return parts.length >= 2 ? parts[0] : null;
-	} else {
-		return parts.length >= 3 ? parts[0] : null;
-	}
+	if(parts.length >= 2) {
+		return parts[0]
+	} 
+	return null
+	// if (host.includes('localhost')) {
+	// 	return parts.length >= 2 ? parts[0] : null;
+	// } else {
+	// 	return parts.length >= 3 ? parts[0] : null;
+	// }
 }
 export async function getConfigFromDbThroughConfigId(config_id: mongoose.Types.ObjectId): Promise<IConfig | null> {
 	try {
