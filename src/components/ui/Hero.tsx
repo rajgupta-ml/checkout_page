@@ -1,7 +1,6 @@
 
 	import { auth } from "@clerk/nextjs/server";
-	import { ArrowRight } from "lucide-react";
-	import Link from "next/link";
+	import { AuthRedirectButton } from "./authRedirect";
 
 	const Hero = async () => {
 		const { isAuthenticated } =  await auth();
@@ -17,14 +16,15 @@
 						Stripe - without needing to code
 					</p>
 				</div>
-				<Link
+				{/* <Link
 					href={isAuthenticated ? "/dashboard" : "/sign-up"}
 					className="bg-primary text-muted w-md text-center flex items-center justify-center p-4"
 				>
 					{isAuthenticated ? "Dashboard" : "Sign Up"}
 					<ArrowRight className="" />
-				</Link>
+				</Link> */}
 
+					<AuthRedirectButton isAuthenticated={isAuthenticated}></AuthRedirectButton>
 			</div>
 		);
 	};
