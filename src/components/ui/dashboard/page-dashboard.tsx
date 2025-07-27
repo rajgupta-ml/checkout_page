@@ -4,27 +4,16 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   Calendar,
-  ChevronRight,
   Copy,
-  CreditCard,
   Edit,
-  UploadIcon as Embed,
   Eye,
   FileText,
-  HelpCircle,
-  Home,
   Loader2,
   MoreHorizontal,
-  Package,
   Plus,
-  Search,
-  Settings,
-  ShoppingCart,
   Trash2,
-  Users,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
@@ -35,7 +24,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SVG } from "../Navbar"
-import { IAnalytics } from "@/model/analytics"
 import { PagesData } from "@/app/dashboard/page"
 import { toast } from "sonner"
 import { UserButton, useUser } from "@clerk/nextjs"
@@ -58,9 +46,9 @@ export function PagesDashboard({pagesData} : {pagesData? : PagesData[]}) {
   };
 
 
-  const handlePageClick = (page: any) => {
+  const handlePageClick = ({id} : {id : string} ) => {
     setIsLoading(true)
-    router.push(`/dashboard/${page.id}/analytics`)
+    router.push(`/dashboard/${id}/analytics`)
   }
 
   const handleCopyEmbedCode = (pageId: string) => {
@@ -231,7 +219,7 @@ export function PagesDashboard({pagesData} : {pagesData? : PagesData[]}) {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={handlePageClick}>
+                            <DropdownMenuItem onClick={() => handlePageClick(page)}>
                               <Eye className="w-4 h-4 mr-2" />
                               View page
                             </DropdownMenuItem>

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { PageAnalytics } from "@/components/ui/dashboard/page-analytics";
 import { getAnalyticsFromDb, getConfigFromDbThroughConfigId } from "@/lib/getSubdomain";
 import { IAnalytics } from "@/model/analytics";

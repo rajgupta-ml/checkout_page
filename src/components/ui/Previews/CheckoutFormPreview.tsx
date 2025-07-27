@@ -133,7 +133,7 @@ const CheckoutForm = ({ dbConfig, livePreview = false, config_id }: { dbConfig?:
 
 	const handlePayment = async () => {
 		setIsProcessing(true);
-		let analytics: IAnalytics = {
+		const analytics: IAnalytics = {
 			config_id : config_id ?? "Default",
 			customerDetails: customerDetail,
 			revenue: parseFloat(calculateTotal()),
@@ -157,6 +157,7 @@ const CheckoutForm = ({ dbConfig, livePreview = false, config_id }: { dbConfig?:
 				alert('Payment processed successfully!');
 			}
 		} catch (error) {
+			console.error(error)
 			analytics.revenue = 0;
 			analytics.payment = 0;
 			analytics.conversion = false;
@@ -174,6 +175,7 @@ const CheckoutForm = ({ dbConfig, livePreview = false, config_id }: { dbConfig?:
 				await axios.post("http://localhost:3000/api/v1/analytics", analytics, Headers)
 				console.log("Analytics Captures")
 			} catch (error) {
+				console.error(error)
 				console.log("Could not capture the analytics");
 			}finally{
 				setIsProcessing(false);

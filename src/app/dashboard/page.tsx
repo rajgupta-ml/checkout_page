@@ -1,7 +1,6 @@
 import { PagesDashboard } from "@/components/ui/dashboard/page-dashboard";
 import { getAnalyticsFromDb, getConfigFromDbThroughUserId } from "@/lib/getSubdomain";
-import { connectToDatabase } from "@/lib/moongose";
-import Analytics, { IAnalytics } from "@/model/analytics";
+import { IAnalytics } from "@/model/analytics";
 import { IConfig } from "@/model/config";
 import { auth } from "@clerk/nextjs/server";
 

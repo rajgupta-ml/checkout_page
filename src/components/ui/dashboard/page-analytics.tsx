@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { ArrowLeft, BarChart3, CreditCard, Edit, Eye, HelpCircle, TrendingUp } from "lucide-react"
+import { ArrowLeft, BarChart3, CreditCard, Eye, HelpCircle, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { PageDetails, RecentPayments } from "@/app/dashboard/[id]/analytics/page"

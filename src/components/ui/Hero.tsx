@@ -1,5 +1,4 @@
 
-	import { useAuth } from "@clerk/nextjs";
 	import { auth } from "@clerk/nextjs/server";
 	import { ArrowRight } from "lucide-react";
 	import Link from "next/link";
