@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 			);
 		}
 
-		const newConfig = await ConfigModel.create({ ...data, userId });
+		const newConfig = await ConfigModel.create({ ...data, userId : userId.toLowerCase() });
 
 		return NextResponse.json({
 			success: true,

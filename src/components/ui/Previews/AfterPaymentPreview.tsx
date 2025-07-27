@@ -1,11 +1,12 @@
-import { configContext } from '@/app/Provider/configProvider';
+"use client"
+import { CheckoutConfig, configContext } from '@/app/Provider/configProvider';
 import { useContext } from 'react';
 import { Card, CardContent } from '../card';
 import { Button } from '../button';
 
-const AfterPaymentPreview = () => {
-	const { checkoutConfig: config } = useContext(configContext);
-
+const AfterPaymentPreview = ({dbConfig} : {dbConfig? : CheckoutConfig}) => {
+	const { checkoutConfig} = useContext(configContext);
+	const config = dbConfig ?? checkoutConfig
 	return (
 		<div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
 			<Card className="w-full max-w-2xl">

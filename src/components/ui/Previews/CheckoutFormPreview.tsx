@@ -11,6 +11,8 @@ import { Badge } from '../badge';
 import { Label } from '../label';
 import { Input } from '../input';
 import { Button } from '../button';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 // Payment method types
 type PaymentMethod = 'card' | 'paypal' | 'apple_pay' | 'google_pay';
@@ -22,8 +24,21 @@ interface PaymentData {
 	cardholderName: string;
 }
 
+
+
+interface IAnalytics { 
+	config_id? : string
+	customerDetails? : {[Key : string] : string | number}
+	revenue? : number,
+	pageView? : number,
+	payment? : number,
+	conversion? : boolean,
+	selectedPaymentMethod? : string,
+	discountApplied? : DiscountCode,
+}
+
 // Enhanced Checkout Form Component with Stripe Support
-const CheckoutForm = ({ dbConfig }: { dbConfig?: CheckoutConfig }) => {
+const CheckoutForm = ({ dbConfig, livePreview = false, config_id }: { dbConfig?: CheckoutConfig, livePreview?: boolean, config_id?: string  }) => {
 	const [appliedDiscount, setAppliedDiscount] = useState<DiscountCode>();
 	const [discountCode, setDiscountCode] = useState('');
 	const [selectedPaymentMethod, setSelectedPaymentMethod] =
@@ -37,13 +52,16 @@ const CheckoutForm = ({ dbConfig }: { dbConfig?: CheckoutConfig }) => {
 		cvv: '',
 		cardholderName: '',
 	});
+	const [customerDetail, setCustomerDetail] = useState<{[key : string] : string | number}>({});
+	
+
+	const router = useRouter();
 
 	const applyDiscount = () => {
 		const code = config.discountCodes.find(
 			(c) => c.code === discountCode && c.active
 		);
 		if (code) {
-			console.log(code);
 			setAppliedDiscount(code);
 		} else {
 			alert('Invalid discount code');
@@ -106,29 +124,63 @@ const CheckoutForm = ({ dbConfig }: { dbConfig?: CheckoutConfig }) => {
 		}
 	};
 
+	const handleChange = (e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName : string) => {
+		setCustomerDetail((prev) => ({
+			...prev,
+			[fieldName]: e.target.value,
+		}));
+	};
+
 	const handlePayment = async () => {
 		setIsProcessing(true);
-
-		// Simulate payment processing
+		let analytics: IAnalytics = {
+			config_id : config_id ?? "Default",
+			customerDetails: customerDetail,
+			revenue: parseFloat(calculateTotal()),
+			pageView: 1,
+			selectedPaymentMethod,
+			discountApplied: appliedDiscount,
+		};
+	
 		try {
-			// Here you would integrate with Stripe
-			// const stripe = await loadStripe('your-publishable-key');
-			// const result = await stripe.confirmCardPayment(client_secret, {
-			//   payment_method: {
-			//     card: elements.getElement(CardElement),
-			//     billing_details: { name: paymentData.cardholderName }
-			//   }
-			// });
-
-			await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
-			alert('Payment processed successfully!');
+			// Simulate delay for payment processing
+			await new Promise((resolve, reject) => setTimeout(Math.random() < 0.5 ? resolve: reject, 2000));
+	
+			analytics.payment = 1;
+			analytics.conversion = true;
+	
+			console.log('Payment Success Analytics:', analytics);
+	
+			if (livePreview) {
+				router.push('/thank-you');
+			} else {
+				alert('Payment processed successfully!');
+			}
 		} catch (error) {
-			console.error(error);
-			alert('Payment failed. Please try again.');
+			analytics.revenue = 0;
+			analytics.payment = 0;
+			analytics.conversion = false;
+			alert("Payement Failed");
+	
 		} finally {
-			setIsProcessing(false);
+			const Headers = {
+				headers : {
+					"content-type" : "application/json"
+				}
+			}
+			// send the API CALL
+
+			try {
+				await axios.post("http://localhost:3000/api/v1/analytics", analytics, Headers)
+				console.log("Analytics Captures")
+			} catch (error) {
+				console.log("Could not capture the analytics");
+			}finally{
+				setIsProcessing(false);
+			}
 		}
 	};
+	
 
 	const paymentMethods = [
 		{
@@ -166,7 +218,7 @@ const CheckoutForm = ({ dbConfig }: { dbConfig?: CheckoutConfig }) => {
 	];
 
 	return (
-		<Card className="w-full max-w-lg">
+		<Card className="w-full max-w-lg bg-background">
 			<CardHeader>
 				<CardTitle className="text-center flex items-center justify-center gap-2">
 					<Lock className="w-5 h-5" />
@@ -177,7 +229,7 @@ const CheckoutForm = ({ dbConfig }: { dbConfig?: CheckoutConfig }) => {
 						<span className="text-3xl font-bold">${calculateTotal()}</span>
 						{appliedDiscount && (
 							<span
-								style={{ backgroundColor: config.brandColors.primary }}
+								style={{ backgroundColor: config.brandColors.background }}
 								className="text-sm line-through px-2 py-0.5 rounded text-white"
 							>
 								${config.price.toFixed(2)}
@@ -213,6 +265,8 @@ const CheckoutForm = ({ dbConfig }: { dbConfig?: CheckoutConfig }) => {
 									id={field.name}
 									placeholder={field.placeholder}
 									required={field.required}
+									value={customerDetail[field.name] || ''}
+									onChange={(e) => handleChange(e, field.name)}
 									className="w-full p-3 border rounded-md h-20 resize-none"
 									style={{ borderColor: config.brandColors.secondary }}
 								/>
@@ -222,6 +276,8 @@ const CheckoutForm = ({ dbConfig }: { dbConfig?: CheckoutConfig }) => {
 									type={field.type}
 									placeholder={field.placeholder}
 									required={field.required}
+									value={customerDetail[field.name] || ''}
+									onChange={(e) => handleChange(e, field.name)}
 									style={{
 										outlineColor: config.brandColors.accent,
 										borderColor: config.brandColors.secondary,
@@ -356,7 +412,7 @@ const CheckoutForm = ({ dbConfig }: { dbConfig?: CheckoutConfig }) => {
 								config.brandColors.primary)
 						}
 					>
-						{isProcessing ? (
+						{ isProcessing ? (
 							<div className="flex items-center gap-2">
 								<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
 								Processing...

@@ -1,6 +1,7 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 
 export interface IConfig extends Document {
+	_id: Types.ObjectId | string; 
 	userId: string;
 	selectedIndex: number;
 	selectedPage: number;
@@ -41,6 +42,8 @@ export interface IConfig extends Document {
 		redirectUrl: string;
 		customMessage: string;
 	};
+
+	createdAt?: Date
 }
 
 const CheckoutFieldSchema: Schema = new Schema(

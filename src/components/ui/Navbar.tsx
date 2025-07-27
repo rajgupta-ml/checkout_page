@@ -1,5 +1,6 @@
 import React from 'react';
 import ThemeToggle from './ThemeToggle';
+import { UserButton } from '@clerk/nextjs';
 
 const Navbar = () => {
 	return (
@@ -8,14 +9,18 @@ const Navbar = () => {
 				<SVG></SVG>
 				<h1 className="text-xl font-bold">Checkout Page </h1>
 			</div>
+			<div className='flex items-cen gap-4'>
 			<ThemeToggle></ThemeToggle>
+			<UserButton></UserButton>
+
+			</div>
 		</div>
 	);
 };
 
 export default Navbar;
 
-const SVG = () => {
+export const SVG = () => {
 	return (
 		<svg
 			width="40"
