@@ -1,4 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+````markdown
+# Checkout Page Builder
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app) that allows users to create customizable checkout pages with no coding required.
+
+## Features
+
+* **Customizable Checkout Pages:** Design checkout pages that match your brand with customizable layouts, colors, and CSS.
+* **Product Management:** Add and manage products, including titles, descriptions, pricing, and images.
+* **Discount Codes:** Create and manage percentage or fixed amount discount codes.
+* **Payment Processing:** Securely accept payments through Stripe.
+* **User Authentication:** User authentication is handled using Clerk.
+* **Analytics Dashboard:** Track page views, revenue, and conversion rates for your checkout pages.
+* **Live Previews:** Instantly preview your checkout pages as you build them.
+
+## Tech Stack
+
+* **Framework:** [Next.js](https://nextjs.org/)
+* **Authentication:** [Clerk](https://clerk.com/)
+* **Database:** [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/)
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+* **UI Components:** [shadcn/ui](https://ui.shadcn.com/)
+* **File Storage:** [Amazon S3](https://aws.amazon.com/s3/)
 
 ## Getting Started
 
@@ -12,25 +34,22 @@ yarn dev
 pnpm dev
 # or
 bun dev
+````
+
+### Prerequisites
+
+You will need to create a `.env.local` file in the root of the project and add the following environment variables:
+
 ```
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+MONGODB_URI=
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+REGION=
+ACCESS_KEY_ID=
+SECRET_ACCESS_KEY=
+S3_BUCKET_NAME=
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+URL=
+```
