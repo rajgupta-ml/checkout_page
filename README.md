@@ -1,6 +1,6 @@
 # Checkout Page Builder
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app) that allows users to create customizable checkout pages with no coding required.
+This is a no-code checkout page builder that allows users to create fully customizable payment forms. Built with Next.js, it integrates with Stripe for payments and Clerk for user authentication.
 
 ## Features
 
