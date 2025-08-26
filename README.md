@@ -1,4 +1,3 @@
-````markdown
 # Checkout Page Builder
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app) that allows users to create customizable checkout pages with no coding required.
@@ -34,7 +33,7 @@ yarn dev
 pnpm dev
 # or
 bun dev
-````
+```
 
 ### Prerequisites
 
@@ -53,3 +52,6 @@ S3_BUCKET_NAME=
 
 URL=
 ```
+
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
